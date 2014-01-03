@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Marker Bunch</title>
+</head>
+
+<body>
+	
+	<h1>Single Marker Example</h1>
+	<div class="example1"></div>
+	<pre>
+var bunch = MarkerBunch([
+	{
+		color: "90-#EB2B2A-#FA5B52"
+	}
+]);
+	</pre>
+	
+	
+	<h1>Canvas Examples</h1>
+	<div class="multiple-canvas"></div>
+	
+	<h1>SVG Examples</h1>
+	<div class="multiple-svg"></div>
+	
+	<script src="bower_components/raphael/raphael-min.js"></script>
+	<script src="markerBunch.js"></script>
+	<script>
+		var example1 = MarkerBunch([
+			{
+				color: "90-#EB2B2A-#FA5B52"
+			}
+		], 50);
+		
+		//document.querySelector(".example1").setAttrbute("src", example1); // cloneNode()
+		document.querySelector(".example1").appendChild(example1.svg());
+		
+		
+		// var example2 = MarkerBunch([
+		// 	{
+		// 		color: "90-#EB2B2A-#FA5B52"
+		// 	},
+		// 	{
+		// 		color: "90-#EB2B2A-#FA5B52"
+		// 	}
+		// ], 50);
+		// 
+		// document.querySelector(".example2").appendChild(example2.cloneNode());
+
+		var generateMarkers = function(j) {
+			var arr = [];
+			for(var i = 0; i < j; i++) {
+				if(Math.ceil((Math.random() * 10)) % 2) {
+					arr.push({color: "90-#fdebb3-#ffc511"});
+				} else {
+					arr.push({color: "90-#EB2B2A-#FA5B52"});
+				}
+
+			} 
+			
+			return arr;
+			
+		}
+		
+		var containerSvg = document.querySelector(".multiple-svg"),
+			containerCanvas = document.querySelector(".multiple-canvas");
+		for(var i = 2; i < 40; i++) {
+			
+			var example = MarkerBunch(generateMarkers(i), 50);
+				
+			containerCanvas.appendChild(example.canvas());
+			containerSvg.appendChild(example.svg());
+			
+		}
+		// 
+		// var example2 = MarkerBunch([
+		// 	{color: "90-#EB2B2A-#FA5B52"},
+		// 	{color: "90-#EB2B2A-#FA5B52"},
+		// 	{color: "90-#EB2B2A-#FA5B52"},
+		// 	{color: "90-#EB2B2A-#FA5B52"},
+		// 	{color: "90-#EB2B2A-#FA5B52"},
+		// 	{color: "90-#EB2B2A-#FA5B52"},
+		// 	{color: "90-#EB2B2A-#FA5B52"}
+		// ], 40);
+		// 
+		// document.querySelector(".example2").appendChild(example2.cloneNode());
+		
+	</script>
+</body>

@@ -1,0 +1,21 @@
+{
+  "name": "marker-bunch",
+  "version": "0.0.1",
+  "homepage": "https://github.com/sfarthin/marker-bunch",
+  "authors": [
+    "Steven Farthing <sfarthin@gmail.com>"
+  ],
+  "description": "Generate different colored map markers and bunches of map markers on the fly",
+  "main": "markerBunch.js",
+  "license": "GPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "raphael": "~2.1.2"
+  }
+}
