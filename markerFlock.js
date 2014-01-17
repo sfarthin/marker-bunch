@@ -79,7 +79,7 @@
 					var style = document.defaultView.getComputedStyle(currentFlock._image),
 						width = Number(style.getPropertyValue("width").replace("px","")),
 						height = Number(style.getPropertyValue("height").replace("px",""));
-						console.log(width, height);
+
 					this._popup.options.offset = [0,-height+8];
 					
 					L.Marker.prototype.openPopup.apply(this,arguments);
@@ -455,8 +455,15 @@
 				
 				img = this._image.cloneNode();
 			} else {
+				// Sometimes _image is the hover image and thats causing new flocks to have the hover color when its copied here (solution below).
 				this._image = this._image.cloneNode();
 				img = this._image;
+				
+				// Lets make certain hover images don't make it in here
+				if(this._image.dataset.orgSrc && this._image.src != this._image.dataset.orgSrc) {
+					img.src = this._image.dataset.orgSrc;
+				} 
+					
 			}
 			
 			// Lets not borrow any of these attributes
@@ -467,7 +474,8 @@
 			img.style["-o-transform"] = "";
 			img.style["z-index"] = "";
 			
-			img.org_src = img.src;
+			img.dataset.orgSrc = img.src;
+			var instance = this;
 			(function(markers) {
 				img.onmouseover = function() {
 					if(hover_options) {
@@ -479,7 +487,7 @@
 			
 		
 			img.onmouseout = function() {
-				this.src = img.org_src;				
+				this.src = img.dataset.orgSrc;				
 			}
 			
 			return img;
@@ -722,7 +730,9 @@
 	* Set Global Marker Scale
 	*
 	**/
-	Flock.scale = function(scale) {
+	var scale = "large";
+	Flock.scale = function(new_scale) {
+		scale = new_scale;
 		// smallest: 	changeScale("markerflock-smallest"),
 		// small: 		changeScale("markerflock-small"),
 		// medium: 	changeScale("markerflock-medium"),
@@ -730,6 +740,10 @@
 		// largest: 	changeScale("markerflock-largest")
 		document.body.className = document.body.className.replace(/ markerflock\-([^ ]+)/gi, "");
 		document.body.className += " markerflock-" + scale;
+	};
+	
+	Flock.getScale = function() {
+		return scale;
 	};
 	
 	/**
