@@ -1,0 +1,476 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Leaflet">
+    <meta name="author" content="Social Psychology Network">
+    <link rel="shortcut icon" href="favicon.png">
+
+    <title>Marker Flocks</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+	<link rel="stylesheet" href="Leaflet.markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+	<!-- <link rel="stylesheet" href="bower_components/bootstrap-colorpicker/css/colorpicker.css" /> -->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+		
+	<style>
+	
+		/**
+		*
+		* Map
+		*
+		**/
+	
+		#map {
+			width: 100%;
+			height:300px;
+		}
+		
+		hr.featurette-divider {
+			margin-top: 40px;
+		}
+		
+		@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+		  /*#map { height: 780px; }*/ /* your css rules for ipad portrait */
+		}
+		
+		@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+		  /*#map { height: 510px; }*/ /* your css rules for ipad landscape */
+		}
+		
+		@media (min-width: 1200px) {
+			#map {
+				height: 500px;
+			}
+		}
+		
+		/**
+		*
+		* Dynamic Marker
+		*
+		**/
+		
+		.dyn {
+			position: relative;
+			top: 100px;
+		}
+		
+		
+		.dyn img {
+			margin: auto;
+			position:absolute;
+			top: 0px;
+			left: 50%;
+		}
+		
+		.slide-to-scale {
+			display: block;
+			margin:auto;
+		}
+		
+		.controls {
+			margin-top: 150px;
+		}
+		
+		@media (max-width: 992px) {
+			.dyn {
+				top: -60px;
+			}
+		}
+		
+		/**
+		*
+		* group examples
+		*
+		**/
+		.cluster-examples {
+			position: absolute;
+			top:75px;
+			left:35px;
+		}
+		.cluster-examples > div {
+			display: inline-block;
+			position: relative;
+			min-width: 75px;
+			min-height: 75px;
+		}
+		
+		.cluster-examples div img {
+			position: absolute;
+			top: 0px;
+			left:0px;
+		}
+		
+		@media (min-width: 1200px) {
+			.cluster-examples {
+				left: 75px;
+			}
+		}
+		
+		input[type='range'] {
+			width: 180px;
+		}
+		
+		input[type='range']::-webkit-slider-thumb {
+/*		    -webkit-appearance: none !important;
+		    background:blue;*/
+		    height:30px;
+		    width:30px;
+		}
+		
+		.controls > div{
+		    display: -ms-flexbox;
+		    -ms-box-orient: horizontal;
+
+		    display: -webkit-flex;
+		    display: -moz-flex;
+		    display: -ms-flex;
+		    display: flex;
+  
+		    -webkit-flex-flow: row wrap;
+		    -moz-flex-flow: row wrap;
+		    -ms-flex-flow: row wrap;
+		    flex-flow: row wrap;
+			
+			
+			
+			margin-bottom: 10px;
+		}
+		
+/*		.controls > div {
+		    display: -webkit-flex;
+		    display: -moz-flex;
+		    display: -ms-flex;
+		    display: flex;
+		}*/
+		
+		.controls label {
+			width: 200px;
+			text-align: right;
+			padding-right: 15px;
+			margin-bottom: 20px;
+			
+		    -webkit-flex-align: center;
+		    -ms-flex-align: center;
+		    -webkit-align-items: center;
+		    align-items: center;
+		}
+		
+		.controls input, .controls div {
+			-webkit-flex: 1;
+			-moz-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+		}
+		
+	</style>
+
+</head>
+<body>
+
+	<div class="container marketing">
+
+		<div class="page-header">
+			<h1><img src="favicon.png" style="width:40px"> Marker Flocks <small>A Leaflet Plugin</small></h1>
+		</div>
+
+		<div id="map"></div>
+
+		<hr class="featurette-divider">
+
+		<div class="row featurette">
+			<div class="col-md-7">
+				<h2 class="featurette-heading">Dynamic Markers</h2>
+				<p class="lead">Marker Flocks utilizes HTML5 canvas to build markers on the fly rather than loading individual images. This will save you bandwidth and allow you to easilly customize your markers.</p>
+				<div class="highlight">
+					<pre>
+// Create a Single Marker
+var marker = MarkerFlock({color: ["#fdebb3", "#ffc511"]});
+
+// Set global marker scale
+MarkerFlock.setScale("large");
+
+// Set global hover state
+MarkerFlock.setHoverOptions({
+ color: ["#54B633", "#45632e"]
+});
+
+// Export the icon
+document.body.append(marker.image());
+document.body.append(marker.image_shadow());
+document.body.append(marker.canvas());
+document.body.append(marker.svg());
+					</pre>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="dyn">
+
+				</div>
+				<div class="controls">
+					<div>
+						<label>Scale:</label>
+						<input type="range" min="0.25" max="1.25" step="0.25" value="1" style="margin-top:-17px">
+					</div>
+					
+					<div>
+						<label>Top Color:</label>
+						<input type="color" name="bottom-color" value="#ffc511">
+					</div>
+					
+					<div>
+						<label>Bottom Color:</label>
+						<input type="color" name="top-color" value="#fdebb3">
+					</div>
+					<div>
+						<label for="enable_hover" style="cursor:pointer;">Enable Hover Color:</label>
+						<input type="checkbox" name="enable_hover" checked id="enable_hover" onchange="if(!this.checked) $('.hoverSection').hide(); else $('.hoverSection').show();">
+					</div>
+					<div class="hoverSection">
+						<label>Top Hover Color:</label>
+						<input type="color" name="hover-top-color" value="#54B633">
+					</div>
+					
+					<div class="hoverSection">
+						<label>Bottom Hover Color:</label>
+						<input type="color" name="hover-bottom-color" value="#45632e">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr class="featurette-divider">
+
+		<div class="row featurette">
+			<div class="col-md-5">
+				<h2 class="featurette-heading">Flocks</h2>
+				<p class="lead">Marker Flocks uses the <a href="https://github.com/Leaflet/Leaflet.markercluster" target="_blank">MarkerCluster</a> plugin to load thousands of map markers, but instead of hiding your markers, it combines nearby map markers into close-knit flocks to preserve the appearence of volume.</p>
+				<div class="highlight">
+					<pre>
+// Create your map
+var map = L.map('map').setView([41.55, -72.65], 13);
+
+// Create a marker cluster
+var markerCluster = L.markerClusterGroup({
+ maxClusterRadius: 8,
+ showCoverageOnHover: false,
+ iconCreateFunction: MarkerFlock.iconCreateFunction
+});
+
+// Create some markers
+var marker = new MarkerFlock({
+ color: ["#54B633", "#45632e"]
+}).leafletMarker([41.55, -72.65]);
+
+// Add it to the Marker Cluster
+markerCluster.addLayer(marker);
+
+...
+
+// Add the Marker Cluster to the map
+map.addLayer(markerCluster);
+					</pre>
+				</div>
+			</div>
+			<div class="col-md-7"><div class="cluster-examples"></div>
+			</div>
+		</div>
+
+	</div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	
+	<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+	<script src="bower_components/raphael/raphael-min.js"></script>
+	<!-- <script src="bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script> -->
+	<script src="Leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+	
+	<script src="markerFlock.js"></script>
+	<script>
+	
+	var hover_options = {color: ["#45632e", "#54B633"]},
+		scale = 1,
+		dyn,
+		color1 = "#fdebb3",
+		color2 = "#ffc511",
+		support_colorinput = $("<input type='color'>").get(0).type == "color";
+	
+	MarkerFlock.setHoverOptions(hover_options);
+	
+	$("input[type=range]").change(function() {
+		if(this.value == 0.25) {
+			MarkerFlock.scale("smallest");
+		} else if(this.value == 0.5) {
+			MarkerFlock.scale("small");
+		} else if(this.value == 0.75) {
+			MarkerFlock.scale("medium");
+		} else if(this.value == 1) {
+			MarkerFlock.scale("large");
+		} else if(this.value == 1.25) {
+			MarkerFlock.scale("largest");
+		}
+	});
+	
+	$("[name=top-color]").change(function() {
+		color1 = this.value;
+		setup();
+	});
+	
+	$("[name=bottom-color]").change(function() {
+		color2 = this.value;
+		setup();
+	});
+	
+	$("[name=hover-bottom-color],[name=hover-top-color]").change(function() {
+		MarkerFlock.setHoverOptions({color: [$("[name=hover-bottom-color]").val(), $("[name=hover-top-color]").val()]});
+	});
+	
+	$("#enable_hover").change(function() {
+		if(this.checked) {
+			MarkerFlock.setHoverOptions({color: [$("[name=hover-bottom-color]").val(), $("[name=hover-top-color]").val()]});
+		} else {
+			MarkerFlock.setHoverOptions(null);
+		}
+		
+	});
+	
+	// if(!support_colorinput) {
+	// 	$(function(){
+	// 		$('[type=color]').colorpicker({horizontal: true});
+	// 	});
+	// }
+	
+	/**
+	*
+	* Group Clustering
+	*
+	**/
+	
+	var generateMarkers = function(j) {
+		var arr = [];
+		for(var i = 0; i < j; i++) {
+			if(Math.ceil((Math.random() * 10)) % 2) {
+				arr.push({color: [color1, color2]});
+			} else {
+				arr.push({color: ["#e06060", "#EB2B2A"]});
+			}
+	
+		} 
+	
+		return arr;
+	
+	}
+	
+	
+	/**
+	*
+	* Leaflet Map
+	*
+	**/
+		
+	var mapQuestTileLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {maxZoom: 18, attribution: '&copy; <a href="www.openstreetmap.org/copyright">OpenStreetMap</a>'}),
+		latlng = L.latLng(41.55490289198392, -72.65582263469696);
+	
+	var map 		= L.map('map', {inertia: false, center: latlng, zoom: 8, layers: [mapQuestTileLayer]}),
+		markerCluster;
+	
+	function getRandomLatLng(map) {
+		// var bounds = map.getBounds(),
+		// 	southWest = bounds.getSouthWest(),
+		// 	northEast = bounds.getNorthEast(),
+		// 	lngSpan = northEast.lng - southWest.lng,
+		// 	latSpan = northEast.lat - southWest.lat;
+		var southWestLat = 41.546873786145014,
+			northEastLng = -72.68026828765869,
+			lngSpan = 0.048923492431640625,
+			latSpan = 0.0160572144263611;
+	
+		return L.latLng(
+				southWestLat + latSpan * Math.random(),
+				northEastLng + lngSpan * Math.random());
+	}
+		
+	function setup() {
+		
+		// Lets put our example clusters at the bottom
+		var clusterExamples = document.querySelector(".cluster-examples");
+		clusterExamples.innerHTML = "";
+		
+		for(var i = 2; i < 40; i++) {
+	
+			var example 	= new MarkerFlock(generateMarkers(i)),
+				div 		= document.createElement("div");
+		
+			div.appendChild(example.image_shadow());
+			div.appendChild(example.image());
+			clusterExamples.appendChild(div);
+	
+		}
+		
+		
+		// Lets clear the markerCLuster and start fresh
+		try { markerCluster.clearLayers(); } catch(e) {}
+		markerCluster = L.markerClusterGroup({
+			maxClusterRadius: 8,
+			showCoverageOnHover: false,
+			iconCreateFunction: MarkerFlock.iconCreateFunction
+		});
+		
+		/**
+		*
+		* Dynamic Markers
+		*
+		**/
+		dyn = new MarkerFlock({color: [color1, color2]});
+	
+		document.querySelector(".dyn").innerHTML = "";
+		document.querySelector(".dyn").appendChild(dyn.image());
+		document.querySelector(".dyn").appendChild(dyn.image_shadow());
+		
+		
+		// Lets make a bunch of Markers
+		var arr = []
+		for (var i = 0; i < 150; i++) {
+			var color;
+			if(Math.ceil((Math.random() * 10)) % 2) {
+				color = [color1, color2];
+			} else {
+				color = ["#e06060", "#EB2B2A"];
+			}
+			
+			var m = new MarkerFlock([{color: color}]).leafletMarker(getRandomLatLng(map));
+			
+			m.bindPopup("Hello, I am random marker " + i);
+			
+			markerCluster.addLayer(m);
+			arr.push(m);
+		}
+		
+		//markerCluster.addLayers(arr);
+		map.addLayer(markerCluster);
+	}
+		
+	setup();
+	//map.addLayer(markerCluster);
+	
+	
+	setup();
+	
+	</script>
+  </body>
+</html>

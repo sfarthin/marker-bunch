@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "raphael": "~2.1.2"
+    "raphael": "~2.1.2",
+    "Leaflet.markercluster": "https://github.com/Leaflet/Leaflet.markercluster"
   }
 }
