@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "raphael": "~2.1.2",
-    "Leaflet.markercluster": "https://github.com/Leaflet/Leaflet.markercluster",
+    "Leaflet.markercluster": "https://github.com/Leaflet/Leaflet.markercluster.git",
     "leaflet": "~0.7.2"
   }
 }
