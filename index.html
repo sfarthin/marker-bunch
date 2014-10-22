@@ -397,8 +397,7 @@ map.addLayer(markerCluster);
 	* Leaflet Map
 	*
 	**/
-		
-	var mapQuestTileLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {maxZoom: 18, attribution: '&copy; <a href="www.openstreetmap.org/copyright">OpenStreetMap</a>'}),
+	var mapQuestTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18, attribution: '&copy; <a href="www.openstreetmap.org/copyright">OpenStreetMap</a>'}),
 		latlng = L.latLng(41.55490289198392, -72.65582263469696);
 	
 	var map 		= L.map('map', {inertia: false, center: latlng, zoom: 8, layers: [mapQuestTileLayer]}),
